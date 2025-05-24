@@ -1,19 +1,19 @@
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { HeroBanner } from '@/components/shared/hero-banner'
+import Hero from '@/components/shared/hero'
 import BookingForm from '@/components/regular-line/reservation/booking-form'
 import type { RegularFlight, Destination } from '@/payload-types'
 
 interface RegularLineReservationPageProps {
-  params: { locale: string }
-  searchParams: {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{
     flightType?: string
     from?: string
     to?: string
     passengers?: string
     isReversed?: string
-  }
+  }>
 }
 
 export default async function RegularLineReservationPage({
@@ -22,7 +22,7 @@ export default async function RegularLineReservationPage({
 }: RegularLineReservationPageProps) {
   const t = await getTranslations('RegularLine.Reservation')
   const payload = await getPayload({ config })
-  const searchParams = await Promise.resolve(initialSearchParams)
+  const searchParams = await initialSearchParams
 
   const flightTypeParam = searchParams.flightType
   const fromId = searchParams.from
@@ -91,13 +91,12 @@ export default async function RegularLineReservationPage({
 
   return (
     <>
-      <HeroBanner
+      <Hero
         title={t('heroBanner.title')}
         subtitle={t('heroBanner.subtitle')}
         buttonText={t('heroBanner.buttonText')}
-        buttonHref="/regular-line/reservation"
+        buttonLink="/regular-line/reservation"
         imageSrc="/images/index/hero.webp"
-        imageAlt={t('heroBanner.imageAlt')}
       />
 
       {error && !routeDetails && (

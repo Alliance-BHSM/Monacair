@@ -21,8 +21,8 @@ export default function FlightRoute({ panoramicFlight }: FlightRouteProps) {
     if (panoramicFlight && panoramicFlight.routes && panoramicFlight.routes.length > 0) {
       const route = panoramicFlight.routes[0]
 
-      if (route.start && route.end && route.end.length > 0) {
-        const startPoint = route.start as PayloadDestination | string
+      if (panoramicFlight.start && route.end && route.end.length > 0) {
+        const startPoint = panoramicFlight.start as PayloadDestination | string
         const endPointOfInterest = route.end[0].point_of_interest
         const endPointDestination =
           endPointOfInterest && typeof endPointOfInterest === 'object'

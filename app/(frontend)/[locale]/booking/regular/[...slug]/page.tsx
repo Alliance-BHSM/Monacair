@@ -1,6 +1,6 @@
 import { Destination } from '@/payload-types'
 import { getTranslations } from 'next-intl/server'
-import { HeroBanner } from '@/components/shared/hero-banner'
+import Hero from '@/components/shared/hero'
 import BookingForm from '@/components/regular-line/reservation/booking-form'
 import { redirect } from '@/i18n/navigation'
 import React from 'react'
@@ -21,7 +21,7 @@ const Regular = async ({
     flex?: string
   }>
 }) => {
-  const t = await getTranslations('RegularLine')
+  const t = await getTranslations('RegularLine.Reservation')
   const query = await searchParams.then((res) => ({
     // TODO: Implement missing flight features into the booking form (i.e., possibly preselected date and flex tariff).
     passengers: {
@@ -37,13 +37,12 @@ const Regular = async ({
 
   return routeDetails ? (
     <>
-      <HeroBanner
+      <Hero
         title={t('heroBanner.title')}
         subtitle={t('heroBanner.subtitle')}
         buttonText={t('heroBanner.buttonText')}
-        buttonHref="/regular-line/reservation"
+        buttonLink="/regular-line/reservation"
         imageSrc="/images/index/hero.webp"
-        imageAlt={t('heroBanner.imageAlt')}
       />
 
       {typeof routeDetails.start_point !== 'string' &&

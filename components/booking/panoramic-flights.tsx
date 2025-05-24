@@ -1,34 +1,46 @@
 import React from 'react'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
+import type { PanoramicFlight, Destination } from '@/payload-types'
 
-const PanoramicFlights = () => {
-  const t = useTranslations('Booking')
+interface PanoramicFlightsProps {
+  panoramicFlights: PanoramicFlight[]
+}
 
-  const destinations = [
-    {
-      name: 'Cannes',
-      image: '/images/index/panoramique.webp',
-      alt: t('panoramic-flights.cannes.alt'),
-    },
-    {
-      name: 'Monaco',
-      image: '/images/index/panoramique.webp',
-      alt: t('panoramic-flights.monaco.alt'),
-    },
-    {
-      name: 'Nice',
-      image: '/images/index/hero.webp',
-      alt: t('panoramic-flights.nice.alt'),
-    },
-    {
-      name: 'Alpes',
-      image: '/images/index/regular.webp',
-      alt: t('panoramic-flights.alps.alt'),
-    },
-  ]
+const PanoramicFlights: React.FC<PanoramicFlightsProps> = async ({ panoramicFlights }) => {
+  const t = await getTranslations('Booking')
+
+  const uniqueStartLocations = new Map<string, { destination: Destination; image?: string }>()
+
+  panoramicFlights.forEach((flight) => {
+    if (flight.start && typeof flight.start === 'object') {
+      const destination = flight.start as Destination
+      if (!uniqueStartLocations.has(destination.slug)) {
+        const heroUrl =
+          typeof flight.hero === 'object' && flight.hero !== null && flight.hero.url
+            ? flight.hero.url
+            : undefined
+        const imageUrl =
+          typeof flight.image === 'object' && flight.image !== null && flight.image.url
+            ? flight.image.url
+            : undefined
+
+        uniqueStartLocations.set(destination.slug, {
+          destination,
+          image: heroUrl || imageUrl || '/images/index/panoramique.webp',
+        })
+      }
+    }
+  })
+
+  const destinations = Array.from(uniqueStartLocations.values()).map(({ destination, image }) => ({
+    name: destination.title,
+    slug: destination.slug,
+    image: image || '/images/index/panoramique.webp',
+    alt: `${t('panoramic-flights.title')} - ${destination.title}`,
+  }))
 
   return (
     <section className="min-h-screen bg-royalblue text-white py-16">
@@ -43,20 +55,22 @@ const PanoramicFlights = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {destinations.map((destination, index) => (
-            <div key={index} className="relative rounded-2xl overflow-hidden group cursor-pointer">
-              <div className="aspect-[3/4] relative">
-                <Image
-                  src={destination.image}
-                  alt={destination.alt}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <Link key={destination.slug || index} href={`/flights/panoramic/${destination.slug}`}>
+              <div className="relative rounded-2xl overflow-hidden group cursor-pointer">
+                <div className="aspect-[3/4] relative">
+                  <Image
+                    src={destination.image}
+                    alt={destination.alt}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                </div>
+                <div className="absolute bottom-0 left-0 p-6">
+                  <h2 className="text-3xl font-bold font-brother">{destination.name}</h2>
+                </div>
               </div>
-              <div className="absolute bottom-0 left-0 p-6">
-                <h2 className="text-3xl font-bold font-brother">{destination.name}</h2>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
 

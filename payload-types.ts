@@ -389,10 +389,6 @@ export interface PanoramicFlight {
    */
   start: string | Destination;
   routes: {
-    /**
-     * Select start location
-     */
-    start: string | Destination;
     end: {
       point_of_interest: {
         /**
@@ -700,7 +696,6 @@ export interface PanoramicFlightsSelect<T extends boolean = true> {
   routes?:
     | T
     | {
-        start?: T;
         end?:
           | T
           | {

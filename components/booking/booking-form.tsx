@@ -68,10 +68,8 @@ const BookingForm = ({
       if (panoramicFlights.length > 0) {
         const departureIds = new Set<string>()
         panoramicFlights.forEach((flight) => {
-          flight.routes?.forEach((route) => {
-            const startId = typeof route.start === 'string' ? route.start : route.start?.slug
-            if (startId) departureIds.add(startId)
-          })
+          const startId = typeof flight.start === 'string' ? flight.start : flight.start?.slug
+          if (startId) departureIds.add(startId)
         })
         filteredDepartures = allDestinations.filter((dest) => departureIds.has(dest.slug))
       }
@@ -120,10 +118,7 @@ const BookingForm = ({
         }
       } else if (flightType === 'panoramic-flight') {
         const panoramicRoutes = panoramicFlights.filter((flight) => {
-          const startId =
-            typeof flight.routes?.[0]?.start === 'string'
-              ? flight.routes[0].start
-              : flight.routes?.[0]?.start?.slug
+          const startId = typeof flight.start === 'string' ? flight.start : flight.start?.slug
 
           return startId === departure
         })
@@ -219,10 +214,7 @@ const BookingForm = ({
         const availableDepIds: string[] = []
 
         panoramicRoutes.forEach((flight) => {
-          const startId =
-            typeof flight.routes?.[0]?.start === 'string'
-              ? flight.routes[0].start
-              : flight.routes?.[0]?.start?.slug
+          const startId = typeof flight.start === 'string' ? flight.start : flight.start?.slug
 
           if (startId && !availableDepIds.includes(startId)) {
             availableDepIds.push(startId)
@@ -308,9 +300,7 @@ const BookingForm = ({
         queryParams.append('newborns', String(newborns))
       }
     } else if (flightType === 'private-flight') {
-      pathname = '/private-flight/reservation'
-      queryParams.append('from', departure)
-      queryParams.append('to', destination)
+      pathname = `/booking/private/${departure}/${destination}`
       queryParams.append('passengers', passengers)
       queryParams.append('adults', String(adults))
 

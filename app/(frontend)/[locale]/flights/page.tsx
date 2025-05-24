@@ -1,4 +1,4 @@
-import { HeroBanner } from '@/components/shared/hero-banner'
+import Hero from '@/components/shared/hero'
 import { getTranslations } from 'next-intl/server'
 import BookingForm from 'components/booking/booking-form'
 import RegularLineSection from 'components/booking/regular-line-section'
@@ -13,15 +13,19 @@ import payload from '@/lib/payload'
 export default async function BookingPage() {
   const t = await getTranslations('Booking')
 
+  const panoramicFlightsData = await payload.find({
+    collection: 'panoramic-flights',
+    depth: 2,
+  })
+
   return (
     <div className="flex flex-col min-h-screen">
-      <HeroBanner
+      <Hero
         title={t('hero.title')}
         subtitle={t('hero.subtitle')}
         buttonText={t('hero.buttonText')}
-        buttonHref="/reservation"
-        imageUrl="/images/index/hero.webp"
-        imageAlt="Vue aérienne de Monaco"
+        buttonLink="/reservation"
+        imageSrc="/images/index/hero.webp"
       />
 
       <BookingForm
@@ -40,7 +44,7 @@ export default async function BookingPage() {
 
       <JetPrive />
 
-      <PanoramicFlights />
+      <PanoramicFlights panoramicFlights={panoramicFlightsData.docs} />
 
       <Footer />
     </div>

@@ -1,5 +1,5 @@
 import { Destination } from '@/payload-types'
-import { HeroBanner } from '@/components/shared/hero-banner'
+import Hero from '@/components/shared/hero'
 import Footer from '@/components/shared/footer'
 import React from 'react'
 import { redirect } from '@/i18n/navigation'
@@ -97,13 +97,12 @@ const Booking = async ({
     case 'private':
       return (
         <div className="flex flex-col min-h-screen">
-          <HeroBanner
+          <Hero
             title={translations('privateJet.title')}
             subtitle={translations('privateJet.subtitle')}
             buttonText={translations('privateJet.buttonText')}
-            buttonHref="/private-jet"
+            buttonLink="/private-jet"
             imageSrc="/images/index/hero.webp"
-            imageAlt={translations('privateJet.imageAlt')}
           />
 
           <BookingForm
@@ -131,13 +130,12 @@ const Booking = async ({
 
       return (
         <div className="flex flex-col min-h-screen">
-          <HeroBanner
+          <Hero
             title={translations('heroBanner.title')}
             subtitle={translations('heroBanner.subtitle')}
             buttonText={translations('heroBanner.buttonText')}
-            buttonHref="/regular-line/reservation"
+            buttonLink="/regular-line/reservation"
             imageSrc="/images/index/hero.webp"
-            imageAlt={translations('heroBanner.imageAlt')}
           />
 
           <BookingForm
@@ -163,13 +161,12 @@ const Booking = async ({
     case 'panoramic':
       return (
         <div className="flex flex-col min-h-screen">
-          <HeroBanner
+          <Hero
             title={translations('hero.title')}
             subtitle={translations('hero.subtitle')}
             buttonText={translations('hero.buttonText')}
-            buttonHref="/panoramic"
+            buttonLink="/panoramic"
             imageSrc="/images/index/hero.webp"
-            imageAlt={translations('hero.imageAlt')}
           />
 
           <BookingForm
